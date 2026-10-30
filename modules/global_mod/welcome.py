@@ -1,4 +1,4 @@
-"""Welcome new members"""
+"""Welcome"""
 from pyrogram.types import Message
 from core.clients import app
 from modules.owner.sudoers import ub_cmd, sudo_only
@@ -14,4 +14,4 @@ async def welcome_cmd(client, message: Message):
         _welcome_text = parts[1]
         await message.reply_text("✅ Welcome message updated.")
     else:
-        await message.reply_text(f"Current welcome:\n{_welcome_text}")
+        await message.reply_text(f"Current welcome:\n<code>{_welcome_text}</code>")

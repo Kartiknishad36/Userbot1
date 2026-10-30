@@ -3,7 +3,7 @@ from pyrogram.types import Message
 from core.clients import app
 from modules.owner.sudoers import ub_cmd, sudo_only
 
-_gbanned = set()
+_gbanned: set[int] = set()
 
 @app.on_message(ub_cmd("gban"))
 @sudo_only
