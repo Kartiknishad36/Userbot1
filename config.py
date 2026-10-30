@@ -29,12 +29,12 @@ BOT_TOKEN = _str("BOT_TOKEN", "")
 OWNER_ID = _int("OWNER_ID", 0)
 
 MONGO_URI = _str("MONGO_URI", "") or _str("MONGODB_URI", "")
-MONGO_DB = _str("MONGO_DB", "yashika")
+MONGO_DB = _str("MONGO_DB", "userbot1")
 
 _log = _str("LOG_GROUP_ID", "")
 LOG_GROUP_ID = int(_log) if _log.lstrip("-").isdigit() else 0
 
-BOT_NAME = _str("BOT_NAME", "Yashika")
+BOT_NAME = _str("BOT_NAME", "Userbot1")
 BOT_USERNAME = _str("BOT_USERNAME", "").lstrip("@")
 OWNER_USERNAME = _str("OWNER_USERNAME", "").lstrip("@")
 SUPPORT_CHAT = _str("SUPPORT_CHAT", "")
@@ -43,9 +43,9 @@ PREFIXES = _str("PREFIXES", ".!")
 
 AUTO_DELETE = _bool("AUTO_DELETE", True)
 try:
-    DELETE_DELAY = float(os.getenv("DELETE_DELAY") or "1.5")
+    DELETE_DELAY = float(os.getenv("DELETE_DELAY") or "1.0")
 except ValueError:
-    DELETE_DELAY = 1.5
+    DELETE_DELAY = 1.0
 
 BASE_URL = _str("BASE_URL", "")
 API_KEY = _str("API_KEY", "")

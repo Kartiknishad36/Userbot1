@@ -1,4 +1,4 @@
-"""Yashika — Bot + optional Userbot (Railway / Render ready)"""
+"""Userbot1 — Bot + Userbot hybrid (Railway / Render ready)"""
 import asyncio
 import importlib
 import os
@@ -15,7 +15,6 @@ from core.notify import notify_owner
 
 
 def keep_alive():
-    """Render Web Service needs an open PORT — health endpoint."""
     try:
         from flask import Flask
     except ImportError:
@@ -26,7 +25,7 @@ def keep_alive():
 
     @web.route("/")
     def home():
-        return f"{BOT_NAME or 'Yashika'} is Running!", 200
+        return f"{BOT_NAME or 'Userbot1'} is Running!", 200
 
     @web.route("/health")
     def health():
@@ -37,8 +36,7 @@ def keep_alive():
     def _run():
         web.run(host="0.0.0.0", port=port, threaded=True, use_reloader=False)
 
-    t = Thread(target=_run, daemon=True)
-    t.start()
+    Thread(target=_run, daemon=True).start()
     print(f"[web] health on 0.0.0.0:{port}")
 
 
@@ -47,6 +45,7 @@ BOT_MODULES = [
     "modules.bot.login_bot",
 ]
 
+# Only modules that exist in the repo (complete set)
 UB_MODULES = [
     "modules.owner.sudoers",
     "modules.owner.login",
@@ -60,10 +59,7 @@ UB_MODULES = [
     "modules.owner.secretlog",
     "modules.vc.play",
     "modules.vc.controls",
-    "modules.utils.vc_welcome",
     "modules.global_mod.gban",
-    "modules.global_mod.gmute",
-    "modules.global_mod.gdel",
     "modules.global_mod.warn",
     "modules.global_mod.broadcast",
     "modules.global_mod.chatmod",
@@ -75,40 +71,23 @@ UB_MODULES = [
     "modules.global_mod.antidelete",
     "modules.global_mod.antiflood",
     "modules.global_mod.locks",
-    "modules.global_mod.rules",
     "modules.global_mod.nightmode",
-    "modules.global_mod.slowmode",
     "modules.global_mod.zombies",
-    "modules.global_mod.autokick",
-    "modules.global_mod.admin_extra",
     "modules.economy.basic",
+    "modules.utils.help_menu",
     "modules.utils.basics",
     "modules.utils.info",
     "modules.utils.intel",
     "modules.utils.nuinfo",
-    "modules.utils.mongo_dp",
     "modules.utils.fun",
     "modules.utils.afk",
     "modules.utils.protect",
     "modules.utils.notes",
-    "modules.utils.system_cmds",
-    "modules.utils.tools",
-    "modules.utils.profile_set",
-    "modules.utils.fun_text",
-    "modules.utils.copy_tools",
-    "modules.utils.hashtag",
-    "modules.utils.vanish",
-    "modules.utils.paste_cmd",
-    "modules.utils.reminder",
-    "modules.utils.filters_words",
-    "modules.utils.qrcode_cmd",
-    "modules.utils.stats_cmd",
-    "modules.utils.setgroup",
-    "modules.utils.telegraph",
     "modules.utils.autojoin",
     "modules.utils.autoreply",
     "modules.utils.dark_spy",
-    "modules.utils.voice",
+    "modules.utils.system_cmds",
+    "modules.utils.tools",
     "modules.media.kang",
     "modules.media.download",
     "modules.media.social",
@@ -132,7 +111,6 @@ def _load(mods, label):
 
 
 async def main():
-    # MUST bind PORT early for Render Web Service health checks
     keep_alive()
 
     if not API_ID or not API_HASH:
@@ -168,7 +146,7 @@ async def main():
         except Exception as e:
             print(f"[boot] sudoers: {e}")
     else:
-        print("[boot] STRING_SESSION missing — userbot OFF (. commands will NOT work)")
+        print("[boot] STRING_SESSION missing — userbot OFF")
 
     if MONGO_URI:
         try:
@@ -215,7 +193,6 @@ async def main():
                 print(f"[userbot] style scan: {e}")
         except Exception as e:
             print(f"[userbot] START FAIL: {type(e).__name__}: {e}")
-            print("[userbot] STRING_SESSION invalid/expired — only BOT works.")
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     client = bot or app
@@ -228,16 +205,16 @@ async def main():
                 mode.append("UB")
             await notify_owner(
                 client,
-                f"<b>{BOT_NAME} STARTED</b>\n"
+                f"<b>{BOT_NAME or 'Userbot1'} STARTED</b>\n"
                 f"Mode: {' + '.join(mode) or 'NONE'}\n"
                 f"Time: <code>{now}</code>\n"
                 f"Owner: <code>{OWNER_ID}</code>\n"
-                f"Try: <code>.ping</code> or bot <code>/help</code>",
+                f"Try: <code>.ping</code> <code>.help</code>",
             )
         except Exception:
             pass
 
-    print("[READY] running — health / · test .ping / /help")
+    print("[READY] running")
     await asyncio.Event().wait()
 
 
@@ -245,7 +222,7 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\n[shutdown] stopped by user")
+        print("\n[shutdown] stopped")
     except Exception as e:
         print(f"[fatal] {type(e).__name__}: {e}")
         raise
