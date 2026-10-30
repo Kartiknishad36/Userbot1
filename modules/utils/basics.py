@@ -3,10 +3,9 @@ from datetime import datetime
 from pyrogram.types import Message
 from core.clients import app
 from modules.owner.sudoers import ub_cmd, sudo_only
-from config import BOT_NAME, BOT_VERSION if False else None
-from config import BOT_NAME as BN
+from config import BOT_NAME
 
-NAME = BN or "Userbot1"
+NAME = BOT_NAME or "Userbot1"
 START = datetime.now()
 
 

@@ -1,163 +1,93 @@
-# ✨💎 YASHIKA PREMIUM 💎✨
+# 💎 Userbot1 — Premium Hybrid
 
-### Telegram **Bot + Userbot** Hybrid · Owner-Only · Multi-Platform Ready
+Telegram **Bot + Userbot** (Kurigram/Pyrogram) · Owner-only · Railway / Render ready
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Kurigram](https://img.shields.io/badge/Telegram-Kurigram-blue.svg)](https://github.com/KurimuzonAkuma/kurigram)
+**Repo:** https://github.com/Kartiknishad36/Userbot1
 
 ---
 
-## 🚀 Quick Start (Local)
+## Quick Start
 
 ```bash
 git clone https://github.com/Kartiknishad36/Userbot1.git
 cd Userbot1
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env with your values
-python generate_session.py   # optional - get STRING_SESSION
+# fill API_ID API_HASH OWNER_ID BOT_TOKEN STRING_SESSION
+python generate_session.py   # optional
 python main.py
 ```
 
 ---
 
-## 🔐 Required Environment Variables
+## Required Env
 
-| Variable         | Required | Description                                      |
-|------------------|----------|--------------------------------------------------|
-| `API_ID`         | ✅       | From [my.telegram.org](https://my.telegram.org)  |
-| `API_HASH`       | ✅       | From my.telegram.org                             |
-| `BOT_TOKEN`      | ✅*      | From [@BotFather](https://t.me/BotFather)        |
-| `OWNER_ID`       | ✅       | Your numeric Telegram ID                         |
-| `STRING_SESSION` | ⚡       | Userbot session (generate with `generate_session.py`) |
-| `LOG_GROUP_ID`   | ⚡       | Private log group (`-100...`)                    |
-| `MONGO_URI`      | ○        | MongoDB (Atlas / Railway) – optional             |
-
-> *Without `STRING_SESSION` → bot-only mode works.  
-> Userbot commands (`.` prefix) require a valid session.
-
----
-
-## ✨ Features
-
-| Category       | Commands / Ability                                      |
-|----------------|---------------------------------------------------------|
-| **Core**       | Owner-only, premium button help menu, auto-delete       |
-| **Info**       | `.info` / `.whois` full profile, `.nuinfo` phone lookup |
-| **Moderation** | Gban, warn, tagall, antilink, nightmode, zombies        |
-| **Music VC**   | `.play` YouTube, skip, pause, queue (PyTgCalls)         |
-| **Owner**      | Clone profile, tracker, multi-session, PM Guard         |
-| **Fun**        | Bro system, ASCII arts, autoreply style learning        |
-| **Utils**      | Notes, filters, AFK, QR, paste, stats, etc.             |
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `API_ID` | ✅ | my.telegram.org |
+| `API_HASH` | ✅ | my.telegram.org |
+| `OWNER_ID` | ✅ | Your Telegram user id |
+| `BOT_TOKEN` | Bot mode | @BotFather |
+| `STRING_SESSION` | Userbot `.` cmds | `generate_session.py` |
+| `MONGO_URI` | ○ | Optional persistence |
+| `LOG_GROUP_ID` | ○ | Log group `-100...` |
+| `BOT_NAME` | ○ | Default `Userbot1` |
+| `AUTO_DELETE` | ○ | Default true |
+| `DELETE_DELAY` | ○ | Seconds (default 1) |
 
 ---
 
-## 📦 Repo Structure
+## Commands (prefix `.` or `!`)
+
+| Category | Commands |
+|----------|----------|
+| **Core** | `.help` `.menu` `.ping` `.alive` `.id` |
+| **Info** | `.info` `.whois` `.nuinfo` |
+| **Mod** | `.tagall` `.gban` `.warn` `.broadcast` `.welcome` |
+| **Fun** | `.bro` `.unbro` `.cat` `.dog` `.rose` `.joke` `.decide` |
+| **Owner** | `.clone` `.back` `.eval` `.exec` `.restart` |
+| **Tools** | `.calc` `.reverse` `.tr` `.afk` `.notes` |
+| **Music** | `.play` `.skip` `.pause` `.stop` (needs VC setup) |
+
+Bot side: `/help` `/start` (if `BOT_TOKEN` set)
+
+---
+
+## Deploy
+
+- **Railway / Render:** Background **Worker** · start `python main.py`
+- **Procfile:** `worker: python3 main.py`
+- **Docker:** `docker build -t userbot1 . && docker run --env-file .env userbot1`
+
+Flask health on `PORT` for web-style hosts: `/` and `/health`.
+
+---
+
+## Structure
 
 ```
 Userbot1/
-├── main.py                 # Boot loader
-├── config.py               # Environment loader
-├── generate_session.py     # Easy STRING_SESSION generator
-├── core/                   # Clients, notify, autodelete, calls
-├── database/               # Mongo + memory fallback
+├── main.py
+├── config.py
+├── core/          clients, autodelete, calls, notify
+├── database/      mongo async
 ├── modules/
-│   ├── bot/                # /start, /login, /help
-│   ├── owner/              # Sudo, clone, tracker, sessions, PM guard
-│   ├── global_mod/         # Tagall, bro, warn, anti-*, broadcast
-│   ├── utils/              # Help, info, nuinfo, fun, tools
-│   ├── media/              # Kang, download
-│   ├── vc/                 # Music player
-│   └── economy/            # Basic economy
-├── requirements.txt
-├── Dockerfile
-├── Procfile
-└── .env.example
+│   ├── bot/
+│   ├── owner/
+│   ├── global_mod/
+│   ├── utils/
+│   ├── media/
+│   └── vc/
+└── requirements.txt
 ```
 
 ---
 
-## 🌐 Deploy Guides
+## Notes
 
-### Best options (always-on worker needed)
+- Owner-only userbot filters (`ub_cmd` + sudo)
+- No third-party upstream auto-pull
+- Never share `STRING_SESSION` / `BOT_TOKEN`
+- Spam/raid tools can ban accounts — use carefully
 
-| Platform     | Type              | Notes                          |
-|--------------|-------------------|--------------------------------|
-| **Railway**  | Background Worker | Recommended                    |
-| **Render**   | Background Worker | Free tier available            |
-| **Koyeb**    | Web Service       | Good free tier                 |
-| **VPS**      | Any               | Most reliable long-term        |
-| **Docker**   | Anywhere          | `docker build -t yashika .`    |
-
-**Local / VPS example:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-# fill .env
-python main.py
-```
-
-**Docker:**
-```bash
-docker build -t yashika .
-docker run -d --env-file .env --name yashika yashika
-```
-
-> Vercel / serverless platforms are **not suitable** (timeouts).
-
----
-
-## 🎮 Important Commands
-
-**Prefix:** `.` or `!` (configurable)
-
-| Command          | Description                     |
-|------------------|---------------------------------|
-| `.help` / `.menu`| Premium button help menu        |
-| `.ping` / `.alive`| Status                          |
-| `.info` / `.whois`| Full user report                |
-| `.play`          | Play music in VC                |
-| `.tagall`        | Mention all members             |
-| `.bro` / `.unbro`| Bro auto-reply system           |
-| `.clone` / `.back`| Profile clone                   |
-| `/login` (bot)   | Interactive session login       |
-
----
-
-## ⚠️ Important Warnings
-
-- This is an **owner-only** personal build. Do not share your `STRING_SESSION` or `BOT_TOKEN`.
-- Features like phone lookup (`.nuinfo`), tracker, clone, raid tools can violate Telegram Terms of Service if misused.
-- Use only on accounts you own. The authors are not responsible for bans or misuse.
-- `.nuinfo` uses public telecom metadata (libphonenumber) + optional API. No Aadhaar / private KYC data.
-
----
-
-## 🛠 Requirements
-
-- Python **3.11+**
-- `ffmpeg` (for music)
-- Optional: MongoDB for persistent data
-- Optional: `cookies.txt` for better YouTube support
-
-Install:
-```bash
-pip install -r requirements.txt
-# On Debian/Ubuntu:
-sudo apt install ffmpeg
-```
-
----
-
-## 📄 License
-
-MIT License – see [LICENSE](LICENSE)
-
----
-
-**Star ⭐ the repo if it helps you.**
-
-`python main.py` · Prefix **.** · Owner only
+**License:** MIT
