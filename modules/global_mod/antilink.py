@@ -1,22 +1,38 @@
 """Anti-link"""
+import re
+from pyrogram import filters
 from pyrogram.types import Message
 from core.clients import app
-from modules.owner.sudoers import ub_cmd, sudo_only
+from modules.owner.sudoers import ub_cmd, sudo_only, is_sudo
 
-_antilink_chats: set[int] = set()
+_enabled = set()
+LINK_RE = re.compile(r"(https?://|t\.me/|telegram\.me/)", re.I)
+
 
 @app.on_message(ub_cmd("antilink"))
 @sudo_only
 async def antilink_cmd(client, message: Message):
-    chat_id = message.chat.id
     parts = (message.text or "").split()
-    arg = parts[1].lower() if len(parts) > 1 else ""
-    if arg in ("on", "enable"):
-        _antilink_chats.add(chat_id)
-        await message.reply_text("🔗 Anti-link: <b>ON</b> for this chat")
-    elif arg in ("off", "disable"):
-        _antilink_chats.discard(chat_id)
-        await message.reply_text("🔗 Anti-link: <b>OFF</b> for this chat")
-    else:
-        status = "ON" if chat_id in _antilink_chats else "OFF"
-        await message.reply_text(f"Anti-link is <b>{status}</b>\nUsage: .antilink on/off")
+    chat = message.chat.id
+    if len(parts) > 1 and parts[1].lower() == "on":
+        _enabled.add(chat)
+        return await message.reply_text("🔗 Anti-link ON")
+    if len(parts) > 1 and parts[1].lower() == "off":
+        _enabled.discard(chat)
+        return await message.reply_text("Anti-link OFF")
+    state = "ON" if chat in _enabled else "OFF"
+    await message.reply_text(f"Anti-link: <b>{state}</b>\nUsage: <code>.antilink on/off</code>")
+
+
+@app.on_message(filters.group & filters.incoming & ~filters.service)
+async def antilink_watch(client, message: Message):
+    if message.chat.id not in _enabled:
+        return
+    if message.from_user and is_sudo(message.from_user.id):
+        return
+    text = message.text or message.caption or ""
+    if LINK_RE.search(text):
+        try:
+            await message.delete()
+        except Exception:
+            pass
