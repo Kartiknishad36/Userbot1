@@ -1,4 +1,4 @@
-"""Autoreply + style scan"""
+"""Autoreply + style learning"""
 from pyrogram.types import Message
 from core.clients import app
 from modules.owner.sudoers import ub_cmd, sudo_only
@@ -22,4 +22,7 @@ async def autoreply_cmd(client, message: Message):
         await message.reply_text("💬 Autoreply style learning: <b>OFF</b>")
     else:
         status = "ON" if _style_enabled else "OFF"
-        await message.reply_text(f"Autoreply is currently <b>{status}</b>\nUse .autoreply on/off")
+        await message.reply_text(
+            f"Autoreply is currently <b>{status}</b>\n"
+            "Usage: .autoreply on / off"
+        )
