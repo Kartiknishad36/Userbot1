@@ -3,7 +3,19 @@ from pyrogram.types import Message
 from core.clients import app
 from modules.owner.sudoers import ub_cmd, sudo_only
 
+_approved = set()
+
 @app.on_message(ub_cmd("pmguard", "approve", "disapprove"))
 @sudo_only
 async def pmguard_cmd(client, message: Message):
-    await message.reply_text("🛡️ PM Guard module loaded.")
+    cmd = message.command[0].lower() if message.command else ""
+    if cmd == "approve" and message.reply_to_message and message.reply_to_message.from_user:
+        uid = message.reply_to_message.from_user.id
+        _approved.add(uid)
+        await message.reply_text(f"✅ Approved <code>{uid}</code>")
+    elif cmd == "disapprove" and message.reply_to_message and message.reply_to_message.from_user:
+        uid = message.reply_to_message.from_user.id
+        _approved.discard(uid)
+        await message.reply_text(f"❌ Disapproved <code>{uid}</code>")
+    else:
+        await message.reply_text("🛡️ PM Guard active.\n.approve / .disapprove (reply)")
